@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { AlertCircle, Download } from "lucide-react"
+import Image from 'next/image';
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface Certificate {
@@ -134,10 +136,12 @@ export default function CertificateVerification() {
               </div>
               <div className="mt-4">
                 <h4 className="text-md font-semibold mb-2">Certificate Preview</h4>
-                <img
-                  src={verifiedCertificate.templateUrl}
-                  alt="Certificate Preview"
-                  className="w-full max-w-md h-auto rounded-lg border"
+                <Image
+                    src={verifiedCertificate.templateUrl}
+                    alt="Certificate Preview"
+                    width={400} // Specify the width you want
+                    height={300} // Specify the height you want
+                    className="rounded-lg border" // Keep your styles
                 />
               </div>
               <Button onClick={handleDownload} className="w-full">

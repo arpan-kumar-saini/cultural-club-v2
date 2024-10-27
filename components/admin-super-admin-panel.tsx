@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Loader2, X, Eye, EyeOff, Pencil, Trash2 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 type AdminType = 'Events Admin' | 'Gallery Admin' | 'Downloads Admin' | 'Team Admin'
 type Permission = 'Read' | 'Create' | 'Update' | 'Delete'

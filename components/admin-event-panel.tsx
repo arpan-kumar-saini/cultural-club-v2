@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -26,6 +27,29 @@ type Event = {
   category: 'upcoming' | 'ongoing' | 'past'
 }
 
+const fetchEvents = async (category: 'upcoming' | 'ongoing' | 'past') => {
+  // Mock data for demonstration
+  return [
+    {
+      id: '1',
+      title: 'Annual Cultural Fest',
+      date: new Date('2024-03-15'),
+      description: 'Join us for a celebration of diverse cultures!',
+      location: 'College Auditorium',
+      category,
+    },
+    {
+      id: '2',
+      title: 'Art Exhibition',
+      date: new Date('2024-04-01'),
+      endDate: new Date('2024-04-07'),
+      description: 'Showcasing student artworks from various departments.',
+      location: 'Art Gallery',
+      category,
+    },
+  ]
+}
+
 export default function AdminEventPanel() {
   const [events, setEvents] = useState<Event[]>([])
   const [activeTab, setActiveTab] = useState<'upcoming' | 'ongoing' | 'past'>('upcoming')
@@ -35,36 +59,16 @@ export default function AdminEventPanel() {
   const { toast } = useToast()
 
   useEffect(() => {
-    fetchEvents()
+    const loadEvents = async () => {
+      const data = await fetchEvents(activeTab)
+      setEvents(data)
+    }
+    loadEvents()
   }, [activeTab])
 
-  const fetchEvents = async () => {
-    // TODO: Replace with actual API call
-    // const response = await fetch(`/api/events?category=${activeTab}`)
-    // const data = await response.json()
-    // setEvents(data)
+  // Other functions and render logic
 
-    // Mock data for demonstration
-    setEvents([
-      {
-        id: '1',
-        title: 'Annual Cultural Fest',
-        date: new Date('2024-03-15'),
-        description: 'Join us for a celebration of diverse cultures!',
-        location: 'College Auditorium',
-        category: activeTab,
-      },
-      {
-        id: '2',
-        title: 'Art Exhibition',
-        date: new Date('2024-04-01'),
-        endDate: new Date('2024-04-07'),
-        description: 'Showcasing student artworks from various departments.',
-        location: 'Art Gallery',
-        category: activeTab,
-      },
-    ])
-  }
+
 
   const handleAddEvent = async (event: Omit<Event, 'id'>) => {
     // TODO: Replace with actual API call
@@ -133,6 +137,8 @@ export default function AdminEventPanel() {
   )
 }
 
+
+
 function EventList({ events, onDeleteEvent }: { events: Event[], onDeleteEvent: (id: string) => void }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -146,7 +152,15 @@ function EventList({ events, onDeleteEvent }: { events: Event[], onDeleteEvent: 
             {event.endDate && <p><strong>End Date:</strong> {format(event.endDate, 'PPP')}</p>}
             <p><strong>Location:</strong> {event.location}</p>
             <p className="mt-2">{event.description}</p>
-            {event.image && <img src={event.image} alt={event.title} className="mt-2 w-full h-40 object-cover" />}
+            {event.image && (
+              <Image
+                src={event.image}
+                alt={event.title}
+                width={400}    // specify a suitable width
+                height={160}   // specify a suitable height
+                className="mt-2 w-full h-40 object-cover"
+              />
+            )}
           </CardContent>
           <CardFooter>
             <Button variant="destructive" onClick={() => onDeleteEvent(event.id)}>
@@ -158,6 +172,7 @@ function EventList({ events, onDeleteEvent }: { events: Event[], onDeleteEvent: 
     </div>
   )
 }
+
 
 function AddEventModal({ isOpen, onClose, onAddEvent }: { isOpen: boolean, onClose: () => void, onAddEvent: (event: Omit<Event, 'id'>) => void }) {
   const [title, setTitle] = useState('')

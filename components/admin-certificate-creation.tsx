@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -109,7 +110,7 @@ export default function CertificateCreation() {
                   )}
                   onClick={() => setSelectedTemplate(template)}
                 >
-                  <img src={template.imageUrl} alt={template.name} className="w-full h-auto mb-2 rounded" />
+                  <Image src={template.imageUrl} alt={template.name} width={150} height={100} className="w-full h-auto mb-2 rounded" />
                   <h4 className="font-semibold">{template.name}</h4>
                   <p className="text-sm text-muted-foreground">{template.description}</p>
                 </div>
@@ -120,9 +121,11 @@ export default function CertificateCreation() {
           {selectedTemplate && (
             <div>
               <h3 className="text-lg font-semibold mb-2">Selected Template Preview</h3>
-              <img
+              <Image
                 src={selectedTemplate.imageUrl}
                 alt={`${selectedTemplate.name} preview`}
+                width={400}
+                height={300}
                 className="w-full max-w-md h-auto rounded-lg border"
               />
             </div>
@@ -230,10 +233,6 @@ export default function CertificateCreation() {
               <p className="mt-2">Certificates have been automatically sent to the email addresses provided in the Excel file.</p>
             )}
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => setShowConfirmation(false)}>Return to Dashboard</Button>
-            <Button>View Generated Certificates</Button>
-          </CardFooter>
         </Card>
       )}
     </div>

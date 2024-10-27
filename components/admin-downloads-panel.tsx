@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle  } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -55,7 +56,7 @@ export default function AdminDownloadsPanel() {
         id: '2',
         title: 'Campus Map',
         description: 'Interactive map of the college campus',
-        type: 'Image',
+        type: 'PDF',
         url: '/mock-files/campus-map.jpg',
       },
     ])
@@ -144,7 +145,8 @@ function FileList({ files, onDeleteFile }: { files: DownloadableFile[], onDelete
             <p className="text-sm mb-2">{file.description}</p>
             <p className="text-sm text-gray-500">Type: {file.type}</p>
             {file.type === 'Image' && (
-              <img src={file.url} alt={file.title} className="mt-2 max-w-full h-auto" />
+              <Image src={file.url} alt={file.title} width={400}
+                height={300} className="mt-2 max-w-full h-auto" />
             )}
           </CardContent>
           <CardFooter>
@@ -271,7 +273,8 @@ function AddFileModal({ isOpen, onClose, onAddFile }: { isOpen: boolean, onClose
             </div>
             {preview && type === 'Image' && (
               <div className="col-span-4">
-                <img src={preview} alt="Preview" className="max-w-full h-auto" />
+                <Image src={preview} alt="Preview" width={400}
+                height={300} className="max-w-full h-auto" />
               </div>
             )}
           </div>

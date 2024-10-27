@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle  } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Trash2, Plus, Image as ImageIcon, Video } from "lucide-react"
+import { Trash2, Plus, Image as  Video } from "lucide-react"
 
 type MediaItem = {
   id: string
@@ -46,7 +47,7 @@ export default function AdminGalleryPanel() {
         title: 'Cultural Dance Performance',
         description: 'Students performing traditional dance at the annual cultural fest.',
         type: 'image',
-        url: '/placeholder.svg?height=200&width=300',
+        url: '@/public/placeholder.svg',
       },
       {
         id: '2',
@@ -133,7 +134,14 @@ function MediaGrid({ items, onDeleteItem }: { items: MediaItem[], onDeleteItem: 
           </CardHeader>
           <CardContent>
             {item.type === 'image' ? (
-              <img src={item.url} alt={item.title} className="w-full h-40 object-cover mb-2" />
+              <Image 
+                src={item.url} 
+                alt={item.title} 
+                width={500} // Set a width that matches your layout requirements
+                height={200} // Adjust the height accordingly
+                className="w-full h-40 object-cover mb-2" 
+                priority // Optional: gives this image priority loading for faster display
+              />
             ) : (
               <div className="w-full h-40 bg-gray-200 flex items-center justify-center mb-2">
                 <Video className="h-12 w-12 text-gray-400" />
@@ -263,7 +271,14 @@ function AddMediaModal({ isOpen, onClose, onAddMedia }: { isOpen: boolean, onClo
             </div>
             {preview && type === 'image' && (
               <div className="col-span-4">
-                <img src={preview} alt="Preview" className="max-w-full h-auto" />
+                <Image 
+                  src={preview} 
+                  alt="Preview" 
+                  width={500} // set a desired width
+                  height={300} // set a desired height
+                  className="max-w-full h-auto" 
+                  layout="responsive" // maintains aspect ratio
+                />
               </div>
             )}
           </div>

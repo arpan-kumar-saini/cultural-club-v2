@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -200,13 +201,19 @@ function TeamMemberList({ members, onEdit, onDelete }: { members: TeamMember[], 
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center space-x-4 mb-4">
-              <img src={member.avatar} alt={member.name} className="w-16 h-16 rounded-full" />
-              <div>
-                <p className="font-semibold">{member.position}</p>
-                <p className="text-sm text-gray-500">{member.branchAndYear}</p>
-              </div>
+          <div className="flex items-center space-x-4 mb-4">
+            <Image 
+              src={member.avatar} 
+              alt={member.name} 
+              width={64} 
+              height={64} 
+              className="rounded-full" 
+            />
+            <div>
+              <p className="font-semibold">{member.position}</p>
+              <p className="text-sm text-gray-500">{member.branchAndYear}</p>
             </div>
+          </div>
             <p className="text-sm mb-2">{member.description}</p>
             <p className="text-sm text-gray-500">Joined: {format(member.dateJoined, 'MMMM d, yyyy')}</p>
           </CardContent>
@@ -241,12 +248,24 @@ function TeamMemberForm({ member, onSubmit, onCancel }: { member: TeamMember | n
   const [branchAndYear, setBranchAndYear] = useState(member?.branchAndYear || '')
   const [dateJoined, setDateJoined] = useState<Date | undefined>(member?.dateJoined)
   const [description, setDescription] = useState(member?.description || '')
-  const [avatar, setAvatar] = useState<File | null>(null)
-  const [avatarPreview, setAvatarPreview] = useState(member?.avatar || '')
+ 
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(member?.avatar || null)
+
   const [linkedin, setLinkedin] = useState(member?.socialMedia.linkedin || '')
   const [twitter, setTwitter] = useState(member?.socialMedia.twitter || '')
   const [instagram, setInstagram] = useState(member?.socialMedia.instagram || '')
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (name && position && branchAndYear && dateJoined && description) {
@@ -256,25 +275,13 @@ function TeamMemberForm({ member, onSubmit, onCancel }: { member: TeamMember | n
         branchAndYear,
         dateJoined,
         description,
-        avatar: avatarPreview, // In a real app, you'd upload the file and get a URL
+        avatar: avatarPreview || "", // In a real app, you'd upload the file and get a URL
         socialMedia: {
           linkedin,
           twitter,
           instagram,
         },
       })
-    }
-  }
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setAvatar(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -334,7 +341,14 @@ function TeamMemberForm({ member, onSubmit, onCancel }: { member: TeamMember | n
         <Label htmlFor="avatar">Avatar</Label>
         <Input id="avatar" type="file" accept="image/*" onChange={handleAvatarChange} />
         {avatarPreview && (
-          <img src={avatarPreview} alt="Avatar preview" className="mt-2 w-16 h-16 rounded-full object-cover" />
+          <div className="mt-2 w-16 h-16 relative">
+            <Image 
+              src={avatarPreview} 
+              alt="Avatar preview" 
+              layout="fill" 
+              className="rounded-full object-cover" 
+            />
+          </div>
         )}
       </div>
       <div>
